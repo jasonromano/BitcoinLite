@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  bitcoinlightd The Bitcoin Light server.
+#
+#
+# chkconfig: 345 80 20
+# description: bitcoinlightd
+# processname: bitcoinlightd
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/bitcoinlightd, see below
+if [ -f /etc/sysconfig/bitcoinlightd ]; then
+        . /etc/sysconfig/bitcoinlightd
+fi
+
+RETVAL=0
+
+prog=bitcoinlightd
+# you can override the lockfile via BITCOIND_LOCKFILE in /etc/sysconfig/bitcoinlightd
+lockfile=${BITCOIND_LOCKFILE-/var/lock/subsys/bitcoinlightd}
+
+# bitcoinlightd defaults to /usr/bin/bitcoinlightd, override with BITCOIND_BIN
+bitcoinlightd=${BITCOIND_BIN-/usr/bin/bitcoinlightd}
+
+# bitcoinlightd opts default to -disablewallet, override with BITCOIND_OPTS
+bitcoinlightd_opts=${BITCOIND_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $bitcoinlightd $bitcoinlightd_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

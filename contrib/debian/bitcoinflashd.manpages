@@ -1,0 +1,3 @@
+debian/manpages/bitcoinlightd.1
+debian/manpages/bitcoinlight.conf.5
+debian/manpages/bitcoinlight-cli.1

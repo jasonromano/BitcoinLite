@@ -1,0 +1,2 @@
+usr/local/bin/bitcoinlightd usr/bin
+usr/local/bin/bitcoinlight-cli usr/bin
